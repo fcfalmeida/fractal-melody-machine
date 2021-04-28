@@ -1,5 +1,7 @@
+import random
 from mido import Message, MidiFile, MidiTrack, second2tick, bpm2tempo
 import converters
+from note import Note
 
 def generate_midi(fractal, branching_factor, depth, bpm, base_duration):
     mid = MidiFile(type=1)
@@ -19,3 +21,22 @@ def generate_midi(fractal, branching_factor, depth, bpm, base_duration):
             tracks[p.order].append(note_off)
 
     return mid
+
+def random_pattern(note_numbers, figures, beats_per_measure):
+        pattern = []
+        total_duration = 0
+
+        while total_duration != beats_per_measure:
+            total_duration = 0
+            pattern = []
+
+            while total_duration < beats_per_measure:
+                note = random.choice(note_numbers)
+                duration = random.choice(figures)
+
+                note = Note(note, duration)
+                pattern.append(note)
+
+                total_duration = total_duration + duration
+
+        return pattern
