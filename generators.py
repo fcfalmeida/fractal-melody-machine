@@ -44,6 +44,5 @@ def random_pattern(note_numbers, figures, beats_per_measure):
 def spread_octaves(fractal, octave_offsets):
     for pattern in fractal:
         pattern.shift_octave(octave_offsets[pattern.order])
-        print(pattern)
 
     return fractal
