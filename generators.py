@@ -15,8 +15,8 @@ def generate_midi(fractal, branching_factor, depth, bpm, base_duration):
         for note in p.notes:
             duration = converters.beats2ticks(note.duration, bpm, mid.ticks_per_beat) / (pow(branching_factor, p.order))
 
-            note_on = Message('note_on', note=note.number, velocity=80, time=0)
-            note_off = Message('note_off', note=note.number, velocity=127, time=int(duration))
+            note_on = Message('note_on', note=note.number, velocity=80, time=0, channel=p.order)
+            note_off = Message('note_off', note=note.number, velocity=127, time=int(duration), channel=p.order)
             tracks[p.order].append(note_on)
             tracks[p.order].append(note_off)
 
