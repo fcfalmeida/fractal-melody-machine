@@ -40,3 +40,10 @@ def random_pattern(note_numbers, figures, beats_per_measure):
                 total_duration = total_duration + duration
 
         return Pattern(pattern)
+
+def spread_octaves(fractal, octave_offsets):
+    for pattern in fractal:
+        pattern.shift_octave(octave_offsets[pattern.order])
+        print(pattern)
+
+    return fractal
