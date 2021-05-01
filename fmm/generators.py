@@ -1,5 +1,5 @@
 import random
-from mido import Message, MidiFile, MidiTrack, second2tick, bpm2tempo
+from mido import Message, MetaMessage, MidiFile, MidiTrack, second2tick, bpm2tempo
 from fmm.utils.converters import beats2ticks
 from fmm.note import Note
 from fmm.pattern import Pattern
@@ -17,14 +17,17 @@ def fractalize(pattern, depth, bf=2):
 
     return fractal
 
-def generate_midi(fractal, branching_factor, depth, bpm, base_duration):
+def generate_midi(fractal, branching_factor, depth, bpm):
     mid = MidiFile(type=1)
     tracks = [MidiTrack() for i in range(depth)]
 
     mid.tracks.extend(tracks)
 
-    for p in fractal:
+    tempo = int(bpm2tempo(bpm))
+    for track in tracks:
+        track.append(MetaMessage('set_tempo', tempo=tempo))
 
+    for p in fractal:
         for note in p.notes:
             duration = beats2ticks(note.duration, bpm, mid.ticks_per_beat) / (pow(branching_factor, p.order))
 

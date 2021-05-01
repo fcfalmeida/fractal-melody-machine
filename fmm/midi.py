@@ -1,7 +1,7 @@
 import time
 import random
 from fmm.generators import fractalize, generate_midi, random_pattern, spread_octaves
-from fmm.theory import notes_in_key
+import fmm.theory as theory
 import fmm.status as status
 
 def play_midi(port, midi_file):
@@ -21,7 +21,7 @@ def _next_fractal(note_numbers, figures, depth, branching_factor):
 
 def infinite_play(depth, branching_factor, figures, key, bpm, midi_port):
     change_prob = 0.3
-    note_numbers = notes_in_key(key)
+    note_numbers = theory.notes_in_key(key)
 
     fractal = _next_fractal(note_numbers, figures, depth, branching_factor)
 
@@ -30,5 +30,5 @@ def infinite_play(depth, branching_factor, figures, key, bpm, midi_port):
         if random.random() < change_prob:
             fractal = _next_fractal(note_numbers, figures, depth, branching_factor)
 
-        mid = generate_midi(fractal, branching_factor, depth, bpm, 4)
+        mid = generate_midi(fractal, branching_factor, depth, bpm)
         play_midi(midi_port, mid)
