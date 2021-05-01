@@ -1,2 +1,0 @@
-MIN_SECOND = 1
-SECOND = 2

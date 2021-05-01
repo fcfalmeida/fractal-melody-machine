@@ -1,8 +1,21 @@
 import random
 from mido import Message, MidiFile, MidiTrack, second2tick, bpm2tempo
-import converters
-from note import Note
-from pattern import Pattern
+from fmm.utils.converters import beats2ticks
+from fmm.note import Note
+from fmm.pattern import Pattern
+
+def fractalize(pattern, depth, bf=2):
+    fractal = []
+
+    for level in range(depth):
+        n = pow(bf, level)
+
+        for j in range(n):
+            p = Pattern(pattern.notes)
+            p.order = level
+            fractal.append(p)
+
+    return fractal
 
 def generate_midi(fractal, branching_factor, depth, bpm, base_duration):
     mid = MidiFile(type=1)
@@ -13,7 +26,7 @@ def generate_midi(fractal, branching_factor, depth, bpm, base_duration):
     for p in fractal:
 
         for note in p.notes:
-            duration = converters.beats2ticks(note.duration, bpm, mid.ticks_per_beat) / (pow(branching_factor, p.order))
+            duration = beats2ticks(note.duration, bpm, mid.ticks_per_beat) / (pow(branching_factor, p.order))
 
             note_on = Message('note_on', note=note.number, velocity=80, time=0, channel=p.order)
             note_off = Message('note_off', note=note.number, velocity=127, time=int(duration), channel=p.order)

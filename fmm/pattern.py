@@ -1,5 +1,4 @@
-from copy import deepcopy
-from note import Note
+from fmm.note import Note
 
 class Pattern:
     def __init__(self, notes):
