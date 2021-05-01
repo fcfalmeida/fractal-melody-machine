@@ -3,9 +3,12 @@ import random
 from fractal import fractalize
 from generators import generate_midi, random_pattern, spread_octaves
 from theory import notes_in_key
+import status
 
 def play_midi(port, midi_file):
     for message in midi_file:
+        if not status.is_playing:
+            break
         time.sleep(message.time)
         if not message.is_meta:
             port.send(message)
@@ -23,7 +26,7 @@ def infinite_play(depth, branching_factor, figures, key, bpm, midi_port):
 
     fractal = _next_fractal(note_numbers, figures, depth, branching_factor)
 
-    while True:
+    while status.is_playing:
         # change pattern with a probability
         if random.random() < change_prob:
             fractal = _next_fractal(note_numbers, figures, depth, branching_factor)
