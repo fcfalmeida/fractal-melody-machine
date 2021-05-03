@@ -1,9 +1,9 @@
 import time
 import random
-from fmm.generators import fractalize, generate_midi, random_pattern, spread_octaves
-import fmm.theory as theory
-import fmm.status as status
-import fmm.params as params
+from fmm.core.generators import fractalize, generate_midi, random_pattern, spread_octaves
+import fmm.core.theory as theory
+import fmm.core.status as status
+import fmm.core.params as params
 
 def play_midi(port, midi_file):
     for message in midi_file:

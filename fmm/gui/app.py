@@ -1,12 +1,12 @@
 import mido
 import threading
 from dearpygui import core, simple
-from fmm.pattern import Pattern
-from fmm.note import Note
-import fmm.theory as theory
-import fmm.midi as midi
-import fmm.status as status
-import fmm.params as params
+from fmm.core.pattern import Pattern
+from fmm.core.note import Note
+import fmm.core.theory as theory
+import fmm.core.midi as midi
+import fmm.core.status as status
+import fmm.core.params as params
 
 class App:
     def __init__(self):

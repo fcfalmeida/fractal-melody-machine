@@ -1,8 +1,8 @@
 import random
 from mido import Message, MetaMessage, MidiFile, MidiTrack, second2tick, bpm2tempo
-from fmm.utils.converters import beats2ticks
-from fmm.note import Note
-from fmm.pattern import Pattern
+from fmm.core.utils.converters import beats2ticks
+from fmm.core.note import Note
+from fmm.core.pattern import Pattern
 
 def fractalize(pattern, depth, bf=2):
     fractal = []

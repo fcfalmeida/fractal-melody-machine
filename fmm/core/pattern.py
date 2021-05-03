@@ -1,4 +1,4 @@
-from fmm.note import Note
+from fmm.core.note import Note
 
 class Pattern:
     def __init__(self, notes):
