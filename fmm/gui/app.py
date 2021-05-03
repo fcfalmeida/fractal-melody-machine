@@ -1,21 +1,14 @@
 import mido
 import threading
 from dearpygui import core, simple
-from fmm.core.pattern import Pattern
-from fmm.core.note import Note
-import fmm.core.theory as theory
+from fmm.core.app import App
 import fmm.core.midi as midi
 import fmm.core.status as status
 import fmm.core.params as params
 
-class App:
+class GUIApp(App):
     def __init__(self):
-        self.port = None
-        params.figures = [theory.FIGURE_8TH_NOTE, theory.FIGURE_QUARTER_NOTE]
-        params.key = 'C'
-        params.depth = 2
-        params.branching_factor = 2
-        params.bpm = 60
+        super().__init__()
 
     def play(self):
         if not status.is_playing:

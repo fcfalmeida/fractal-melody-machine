@@ -1,4 +1,4 @@
-from fmm.gui.app import App
+from fmm.gui.app import GUIApp
 
-app = App()
+app = GUIApp()
 app.start()
