@@ -6,21 +6,22 @@ from fmm.note import Note
 import fmm.theory as theory
 import fmm.midi as midi
 import fmm.status as status
+import fmm.params as params
 
 class App:
     def __init__(self):
         self.port = None
-        self.figures = [theory.FIGURE_8TH_NOTE, theory.FIGURE_QUARTER_NOTE]
-        self.depth = 2
-        self.branching_factor = 2
-        self.bpm = 60
+        params.figures = [theory.FIGURE_8TH_NOTE, theory.FIGURE_QUARTER_NOTE]
+        params.key = 'C'
+        params.depth = 2
+        params.branching_factor = 2
+        params.bpm = 60
 
     def play(self):
         if not status.is_playing:
             status.is_playing = True
 
-            play_thread = threading.Thread(target=midi.infinite_play, args=(
-                self.depth, self.branching_factor, self.figures, 'F', self.bpm, self.port))
+            play_thread = threading.Thread(target=midi.infinite_play, args=(self.port,))
             play_thread.start()
         else:
             status.is_playing = False
