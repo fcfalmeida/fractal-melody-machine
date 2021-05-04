@@ -20,6 +20,7 @@ class NoGUIApp(App):
         params.depth = 4
         params.branching_factor = 2
         params.bpm = 60
+        params.change_prob = 0.7
 
     def play(self):
         if not status.is_playing:

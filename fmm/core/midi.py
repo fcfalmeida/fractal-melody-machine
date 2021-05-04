@@ -21,14 +21,13 @@ def _next_fractal(note_numbers, figures, depth, branching_factor):
     return fractal
 
 def infinite_play(midi_port):
-    change_prob = 0.3
     note_numbers = theory.notes_in_key(params.key)
 
     fractal = _next_fractal(note_numbers, params.figures, params.depth, params.branching_factor)
 
     while status.is_playing:
         # change pattern with a probability
-        if random.random() < change_prob:
+        if random.random() < params.change_prob:
             fractal = _next_fractal(note_numbers, params.figures, params.depth, params.branching_factor)
 
         mid = generate_midi(fractal, params.branching_factor, params.depth, params.bpm)
