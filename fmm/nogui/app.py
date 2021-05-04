@@ -4,6 +4,7 @@ import signal
 import sys
 from fmm.core.app import App
 import fmm.core.midi as midi
+import fmm.core.theory as theory
 import fmm.core.status as status
 import fmm.core.params as params
 
@@ -13,6 +14,12 @@ def quit(sig, frame):
 class NoGUIApp(App):
     def __init__(self):
         super().__init__()
+
+        params.figures = [theory.FIGURE_8TH_NOTE, theory.FIGURE_QUARTER_NOTE]
+        params.key = 'D'
+        params.depth = 4
+        params.branching_factor = 2
+        params.bpm = 60
 
     def play(self):
         if not status.is_playing:
