@@ -32,3 +32,5 @@ def infinite_play(midi_port):
 
         mid = generate_midi(fractal, params.branching_factor, params.depth, params.bpm)
         play_midi(midi_port, mid)
+
+    midi_port.reset()
