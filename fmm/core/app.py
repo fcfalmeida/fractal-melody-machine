@@ -11,6 +11,7 @@ class App(metaclass=abc.ABCMeta):
         params.depth = 2
         params.branching_factor = 2
         params.bpm = 60
+        params.octave_spread = [-1, -1, 0, 1, 2]
         params.change_prob = 0.3
 
     @abc.abstractmethod

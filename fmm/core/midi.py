@@ -13,22 +13,22 @@ def play_midi(port, midi_file):
         if not message.is_meta:
             port.send(message)
 
-def _next_fractal(note_numbers, figures, depth, branching_factor):
+def _next_fractal(note_numbers, figures, depth, branching_factor, octave_spread):
     pattern = random_pattern(note_numbers, figures, 4)
     fractal = fractalize(pattern, depth, branching_factor)
-    fractal = spread_octaves(fractal, [-1, -1, 0, 1, 2])
+    fractal = spread_octaves(fractal, octave_spread)
 
     return fractal
 
 def infinite_play(midi_port):
     note_numbers = theory.notes_in_key(params.key)
 
-    fractal = _next_fractal(note_numbers, params.figures, params.depth, params.branching_factor)
+    fractal = _next_fractal(note_numbers, params.figures, params.depth, params.branching_factor, params.octave_spread)
 
     while status.is_playing:
         # change pattern with a probability
         if random.random() < params.change_prob:
-            fractal = _next_fractal(note_numbers, params.figures, params.depth, params.branching_factor)
+            fractal = _next_fractal(note_numbers, params.figures, params.depth, params.branching_factor, params.octave_spread)
 
         mid = generate_midi(fractal, params.branching_factor, params.depth, params.bpm)
         play_midi(midi_port, mid)
