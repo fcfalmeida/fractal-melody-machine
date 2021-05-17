@@ -140,5 +140,8 @@ cython_debug/
 # VSCode
 .vscode/
 
+# OSX
+.DS_Store
+
 # Pickle dump files
 *.p
