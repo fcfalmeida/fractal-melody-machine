@@ -22,13 +22,15 @@ def _next_fractal(note_numbers, figures, depth, branching_factor, octave_spread)
 
 def infinite_play(midi_port):
     note_numbers = theory.notes_in_key(params.key)
-
     fractal = _next_fractal(note_numbers, params.figures, params.depth, params.branching_factor, params.octave_spread)
 
     while status.is_playing:
         # change pattern with a probability
-        if random.random() < params.change_prob:
+        if random.random() < params.change_prob or status.params_changed:
+            note_numbers = theory.notes_in_key(params.key)
             fractal = _next_fractal(note_numbers, params.figures, params.depth, params.branching_factor, params.octave_spread)
+
+            status.params_changed = False
 
         mid = generate_midi(fractal, params.branching_factor, params.depth, params.bpm)
         play_midi(midi_port, mid)

@@ -26,12 +26,18 @@ class GUIApp(App):
     def change_key(self):
         params.key = core.get_value('ComboKey')
 
+        status.params_changed = True
+
     def change_bpm(self):
         params.bpm = core.get_value('SliderBPM')
+
+        status.params_changed = True
 
     def change_prob(self):
         prob = core.get_value('SliderProb')
         params.change_prob = round(prob, 2)
+
+        status.params_changed = True
 
     def change_figures(self, figure):
         checked = core.get_value(figure)
@@ -42,7 +48,7 @@ class GUIApp(App):
         else:
             params.figures.remove(figure_value)
 
-        print(params.figures)
+        status.params_changed = True
 
     def change_midi_port(self):
         self.port.close()
@@ -52,11 +58,13 @@ class GUIApp(App):
 
     def change_depth(self):
         params.depth = core.get_value('SliderDepth')
-        print(params.depth)
+
+        status.params_changed = True
 
     def change_bf(self):
         params.branching_factor = core.get_value('SliderBF')
-        print(params.branching_factor)
+
+        status.params_changed = True
 
     def start(self):
         available_ports = mido.get_output_names()
