@@ -1,5 +1,6 @@
 import mido
 import threading
+import re
 from dearpygui import core, simple
 from fmm.core.app import App
 import fmm.core.theory as theory
@@ -11,8 +12,11 @@ class GUIApp(App):
     def __init__(self):
         super().__init__()
 
+        self.MAX_DEPTH = 16
+
         # TODO set default params
         params.figures = []
+        params.octave_spread = [0] * self.MAX_DEPTH
 
     def play(self):
         if not status.is_playing:
@@ -61,10 +65,37 @@ class GUIApp(App):
 
         status.params_changed = True
 
+        # Clear sliders
+        for layer in range(self.MAX_DEPTH):
+            text = f'Layer {layer+1}'
+            slider_name = f'SliderOct{layer}'
+
+            try:
+                core.delete_item(text)
+                core.delete_item(slider_name)
+            except SystemError:
+                pass
+
+        # Add sliders
+        for layer in range(params.depth):
+            text = f'Layer {layer+1}'
+            slider_name = f'SliderOct{layer}'
+
+            core.add_text(text, parent='OctaveWindow')
+            core.add_slider_int(slider_name, default_value=params.octave_spread[layer], min_value=-2, max_value=2, label='', width=100, parent='OctaveWindow', callback=self.change_octave)
+
+
     def change_bf(self):
         params.branching_factor = core.get_value('SliderBF')
 
         status.params_changed = True
+
+    def change_octave(self, name):
+        depth = re.findall('\d+', name)[0]
+        depth = int(depth)
+
+        octave_offset = core.get_value(name)
+        params.octave_spread[depth] = octave_offset
 
     def start(self):
         available_ports = mido.get_output_names()
@@ -132,6 +163,9 @@ class GUIApp(App):
             core.add_text('Branching Factor')
             core.add_slider_int('SliderBF', default_value=2, min_value=2, max_value=4, label='', width=100, callback=self.change_bf)
 
+            core.add_text('Octave Spread')
+            core.add_child('OctaveWindow', width=300, height=150)
+            core.end()
             #########################################################################################################
 
             # Close table
