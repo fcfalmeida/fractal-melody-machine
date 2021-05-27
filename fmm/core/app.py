@@ -4,7 +4,8 @@ import fmm.core.params as params
 
 class App(metaclass=abc.ABCMeta):
     def __init__(self):
-        self.port = None
+        self.in_port = None
+        self.out_port = None
         # Set default params
         params.figures = [theory.FIGURE_8TH_NOTE, theory.FIGURE_QUARTER_NOTE]
         params.key = 'C'

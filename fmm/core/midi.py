@@ -36,3 +36,6 @@ def infinite_play(midi_port):
         play_midi(midi_port, mid)
 
     midi_port.reset()
+
+def get_midi_input(message):
+    print(message)

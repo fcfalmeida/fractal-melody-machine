@@ -22,7 +22,7 @@ class GUIApp(App):
         if not status.is_playing:
             status.is_playing = True
 
-            play_thread = threading.Thread(target=midi.infinite_play, args=(self.port,))
+            play_thread = threading.Thread(target=midi.infinite_play, args=(self.out_port,))
             play_thread.start()
         else:
             status.is_playing = False
@@ -54,11 +54,17 @@ class GUIApp(App):
 
         status.params_changed = True
 
-    def change_midi_port(self):
-        self.port.close()
+    def change_midi_in_port(self):
+        status.current_in_port.close()
 
-        port_name = core.get_value('ComboPort')
-        mido.open_output(port_name)
+        port_name = core.get_value('ComboInPort')
+        status.current_in_port = mido.open_input(port_name, callback=midi.get_midi_input)
+
+    def change_midi_out_port(self):
+        self.out_port.close()
+
+        port_name = core.get_value('ComboOutPort')
+        self.out_port = mido.open_output(port_name)
 
     def change_depth(self):
         params.depth = core.get_value('SliderDepth')
@@ -98,12 +104,16 @@ class GUIApp(App):
         params.octave_spread[depth] = octave_offset
 
     def start(self):
-        available_ports = mido.get_output_names()
+        available_out_ports = mido.get_output_names()
+        available_in_ports = mido.get_input_names()
 
-        if len(available_ports) > 0:
-            self.port = mido.open_output(available_ports[0])
+        if len(available_in_ports) > 0:
+            status.current_in_port = mido.open_input(available_in_ports[0], callback=midi.get_midi_input)
 
-        with simple.window('Fractal Melody Machine'):
+        if len(available_out_ports) > 0:
+            self.out_port = mido.open_output(available_out_ports[0])
+
+        with simple.window('Fractal Melody Machine', width=500, height=300):
             core.add_table('LayoutTable', [], hide_headers=True, height=80)
 
             core.add_columns('LayoutTableCols', 3, border=False)
@@ -145,9 +155,16 @@ class GUIApp(App):
             # Middle Column
             #########################################################################################################
 
-            core.add_text('MIDI Port')
-            core.add_combo('ComboPort', items=mido.get_output_names(), default_value=self.port.name, label='', width=100, callback=self.change_midi_port)
+            core.add_text('MIDI Input Port')
+            core.add_combo('ComboInPort', items=mido.get_input_names(), default_value=status.current_in_port.name, label='', width=100, callback=self.change_midi_in_port)
+
             core.add_spacing(count=5)
+
+            core.add_text('MIDI Output Port')
+            core.add_combo('ComboOutPort', items=mido.get_output_names(), default_value=self.out_port.name, label='', width=100, callback=self.change_midi_out_port)
+         
+            core.add_spacing(count=5)
+
             core.add_button('Play', callback=self.play, width=100, height=50)
 
             #########################################################################################################
@@ -172,4 +189,3 @@ class GUIApp(App):
             # core.end()
 
         core.start_dearpygui(primary_window='Fractal Melody Machine') 
-
