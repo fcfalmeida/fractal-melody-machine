@@ -3,6 +3,9 @@ import threading
 import re
 from dearpygui import core, simple
 from fmm.core.app import App
+from fmm.core.pattern_recorder import PatternRecorder
+from fmm.core.generators import fractalize
+from fmm.core.pattern import Pattern
 import fmm.core.theory as theory
 import fmm.core.midi as midi
 import fmm.core.status as status
@@ -18,14 +21,14 @@ class GUIApp(App):
         params.figures = []
         params.octave_spread = [0] * self.MAX_DEPTH
 
+        self.recorder = PatternRecorder(params.bpm, 4, on_finish=self.play)
+
     def play(self):
         if not status.is_playing:
             status.is_playing = True
 
-            play_thread = threading.Thread(target=midi.infinite_play, args=(self.out_port,))
+            play_thread = threading.Thread(target=midi.infinite_play, args=(self.out_port, self.create_fractal))
             play_thread.start()
-        else:
-            status.is_playing = False
 
     def change_key(self):
         params.key = core.get_value('ComboKey')
@@ -34,6 +37,9 @@ class GUIApp(App):
 
     def change_bpm(self):
         params.bpm = core.get_value('SliderBPM')
+
+        # Update recorder bpm
+        self.recorder = PatternRecorder(params.bpm, 4, on_finish=self.play)
 
         status.params_changed = True
 
@@ -58,7 +64,7 @@ class GUIApp(App):
         status.current_in_port.close()
 
         port_name = core.get_value('ComboInPort')
-        status.current_in_port = mido.open_input(port_name, callback=midi.get_midi_input)
+        status.current_in_port = mido.open_input(port_name, callback=self.get_midi_input)
 
     def change_midi_out_port(self):
         self.out_port.close()
@@ -103,12 +109,23 @@ class GUIApp(App):
         octave_offset = core.get_value(name)
         params.octave_spread[depth] = octave_offset
 
+    def get_midi_input(self, message):
+        if not self.recorder.recording:
+            self.recorder.start()
+
+        self.recorder.record_message(message)
+
+    def create_fractal(self):
+        pattern = Pattern(self.recorder.recorded_messages)
+
+        return fractalize(pattern, params.bpm, params.depth, params.branching_factor)
+
     def start(self):
         available_out_ports = mido.get_output_names()
         available_in_ports = mido.get_input_names()
 
         if len(available_in_ports) > 0:
-            status.current_in_port = mido.open_input(available_in_ports[0], callback=midi.get_midi_input)
+            status.current_in_port = mido.open_input(available_in_ports[0], callback=self.get_midi_input)
 
         if len(available_out_ports) > 0:
             self.out_port = mido.open_output(available_out_ports[0])

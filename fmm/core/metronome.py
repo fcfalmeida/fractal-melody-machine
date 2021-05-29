@@ -4,11 +4,12 @@ from fmm.core.utils.repeated_timer import RepeatedTimer
 import fmm.core.status as status
 
 class Metronome:
-    def __init__(self, bpm, beats_measure):
+    def __init__(self, bpm, beats_measure, callback=None):
         self.bpm = bpm
         self.beats_measure = beats_measure
         self.current_beat = 0
         self.elapsed_measures = 0
+        self.callback = callback
 
         timer_interval = beats2seconds(1, self.bpm)
         self.timer = RepeatedTimer(timer_interval, self._beat)
@@ -19,6 +20,9 @@ class Metronome:
         else:
             print('Weak beat')
 
+        if (self.callback):
+            self.callback(self.current_beat, self.elapsed_measures)
+
         self.current_beat += 1
 
         if (self.current_beat >= self.beats_measure):
@@ -28,6 +32,10 @@ class Metronome:
     def start(self):
         self.current_beat = 0
         self.elapsed_measures = 0
+
+        # Instantly trigger first beat
+        self._beat()
+        
         self.timer.start()
 
     def stop(self):

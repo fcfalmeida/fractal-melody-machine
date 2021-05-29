@@ -4,20 +4,21 @@ from fmm.core.utils.converters import beats2ticks
 from fmm.core.note import Note
 from fmm.core.pattern import Pattern
 
-def fractalize(pattern, depth, bf=2):
+def fractalize(pattern, bpm, depth, bf=2):
     fractal = []
 
     for level in range(depth):
         n = pow(bf, level)
 
         for j in range(n):
-            p = Pattern(pattern.notes)
+            p = Pattern(pattern.messages)
             p.order = level
+            p.set_message_times(bf)
             fractal.append(p)
 
     return fractal
 
-def generate_midi(fractal, branching_factor, depth, bpm):
+def generate_midi(fractal, depth, bpm):
     mid = MidiFile(type=1)
     tracks = [MidiTrack() for i in range(depth)]
 
@@ -27,14 +28,8 @@ def generate_midi(fractal, branching_factor, depth, bpm):
     for track in tracks:
         track.append(MetaMessage('set_tempo', tempo=tempo))
 
-    for p in fractal:
-        for note in p.notes:
-            duration = beats2ticks(note.duration, bpm, mid.ticks_per_beat) / (pow(branching_factor, p.order))
-
-            note_on = Message('note_on', note=note.number, velocity=80, time=0, channel=p.order)
-            note_off = Message('note_off', note=note.number, velocity=127, time=int(duration), channel=p.order)
-            tracks[p.order].append(note_on)
-            tracks[p.order].append(note_off)
+    for pattern in fractal:
+        tracks[pattern.order].extend(pattern.messages)
 
     return mid
 
