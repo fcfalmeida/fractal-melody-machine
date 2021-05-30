@@ -12,6 +12,7 @@ class PatternRecorder:
         self.recording = False
         self.last_message_time = 0
         self.recorded_messages = []
+        self._buffer = []
 
     def _on_beat(self, beat, measure):
         if (measure == self.record_measures):
@@ -20,7 +21,7 @@ class PatternRecorder:
         print(f'Beat: {beat} | Measure: {measure}')
 
     def _reset(self):
-        self.recorded_messages = []
+        self._buffer = []
         self.last_message_time = 0
 
     def record_message(self, message):
@@ -30,7 +31,7 @@ class PatternRecorder:
         current_time = time.time()
 
         # Initialize time to the on the time the first message arrives at
-        if not self.recorded_messages:
+        if not self._buffer:
             self.last_message_time = current_time
 
         delta_time = current_time - self.last_message_time
@@ -38,7 +39,7 @@ class PatternRecorder:
 
         # TODO: get the ticks per beat value from some constant
         message.time = second2tick(delta_time, 480, bpm2tempo(self.bpm))
-        self.recorded_messages.append(message)
+        self._buffer.append(message)
         print(message)
 
     def start(self):
@@ -57,14 +58,18 @@ class PatternRecorder:
         tick_target = 480 * self.beats_measure
         total_ticks = 0
 
-        for msg in self.recorded_messages:
+        for msg in self._buffer:
             total_ticks += msg.time
 
         eot = MetaMessage('end_of_track', time=tick_target - total_ticks)
-        self.recorded_messages.append(eot)
+        self._buffer.append(eot)
 
         reset = Message('reset', time=tick_target - total_ticks)
-        self.recorded_messages.append(reset)
+        self._buffer.append(reset)
+
+        # Copy buffer to recorded_messages
+        self.recorded_messages = self._buffer.copy()
+        self._buffer = []
 
         print(eot)
         print(reset)
