@@ -110,7 +110,7 @@ class GUIApp(App):
         params.octave_spread[depth] = octave_offset
 
     def get_midi_input(self, message):
-        if not self.recorder.recording:
+        if not self.recorder.recording and message.type == 'note_on':
             self.recorder.start()
 
         self.recorder.record_message(message)
