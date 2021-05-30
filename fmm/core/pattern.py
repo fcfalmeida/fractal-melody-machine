@@ -10,7 +10,7 @@ class Pattern:
     @order.setter
     def order(self, value):
         for i in range(len(self.messages)):
-            if not self.messages[i].is_meta:
+            if not self.messages[i].is_meta and not self.messages[i].type == 'reset':
                 self.messages[i] = self.messages[i].copy(channel=value)
 
         self._order = value

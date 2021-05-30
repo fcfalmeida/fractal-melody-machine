@@ -1,5 +1,5 @@
 import time
-from mido import second2tick, bpm2tempo, MetaMessage
+from mido import second2tick, bpm2tempo, Message, MetaMessage
 from fmm.core.metronome import Metronome
 
 class PatternRecorder:
@@ -63,6 +63,10 @@ class PatternRecorder:
         eot = MetaMessage('end_of_track', time=tick_target - total_ticks)
         self.recorded_messages.append(eot)
 
+        reset = Message('reset', time=tick_target - total_ticks)
+        self.recorded_messages.append(reset)
+
         print(eot)
+        print(reset)
 
         self.on_finish()
