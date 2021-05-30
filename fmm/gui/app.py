@@ -21,7 +21,7 @@ class GUIApp(App):
         params.figures = []
         params.octave_spread = [0] * self.MAX_DEPTH
 
-        self.recorder = PatternRecorder(params.bpm, 4, on_finish=self.play)
+        self.recorder = PatternRecorder(params.bpm, self.play)
 
     def play(self):
         if not status.is_playing:
