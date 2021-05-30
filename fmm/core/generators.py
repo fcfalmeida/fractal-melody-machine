@@ -1,7 +1,5 @@
 import random
-from mido import Message, MetaMessage, MidiFile, MidiTrack, second2tick, bpm2tempo
-from fmm.core.utils.converters import beats2ticks
-from fmm.core.note import Note
+from mido import MetaMessage, MidiFile, MidiTrack, bpm2tempo
 from fmm.core.pattern import Pattern
 
 def fractalize(pattern, bpm, depth, bf=2):
@@ -32,25 +30,6 @@ def generate_midi(fractal, depth, bpm):
         tracks[pattern.order].extend(pattern.messages)
 
     return mid
-
-def random_pattern(note_numbers, figures, beats_per_measure):
-        pattern = []
-        total_duration = 0
-
-        while total_duration != beats_per_measure:
-            total_duration = 0
-            pattern = []
-
-            while total_duration < beats_per_measure:
-                note = random.choice(note_numbers)
-                duration = random.choice(figures)
-
-                note = Note(note, duration)
-                pattern.append(note)
-
-                total_duration = total_duration + duration
-
-        return Pattern(pattern)
 
 def spread_octaves(fractal, octave_offsets):
     for pattern in fractal:
