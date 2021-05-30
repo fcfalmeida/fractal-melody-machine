@@ -1,6 +1,7 @@
 import time
 from mido import second2tick, bpm2tempo, Message, MetaMessage
 from fmm.core.metronome import Metronome
+from fmm.core.utils.helpers import add_missing_noteoffs
 
 class PatternRecorder:
     def __init__(self, bpm, beats_measure, record_measures=1, on_finish=None):
@@ -30,7 +31,7 @@ class PatternRecorder:
 
         current_time = time.time()
 
-        # Initialize time to the on the time the first message arrives at
+        # Initialize time to the time the first message arrives at
         if not self._buffer:
             self.last_message_time = current_time
 
@@ -61,17 +62,17 @@ class PatternRecorder:
         for msg in self._buffer:
             total_ticks += msg.time
 
-        eot = MetaMessage('end_of_track', time=tick_target - total_ticks)
-        self._buffer.append(eot)
+        delta_time = tick_target - total_ticks
 
-        reset = Message('reset', time=tick_target - total_ticks)
+        self._buffer = add_missing_noteoffs(self._buffer, delta_time / 2)
+        
+        reset = Message('reset', time=delta_time / 2)
         self._buffer.append(reset)
 
         # Copy buffer to recorded_messages
         self.recorded_messages = self._buffer.copy()
         self._buffer = []
 
-        print(eot)
         print(reset)
 
         self.on_finish()
