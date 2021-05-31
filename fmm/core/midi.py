@@ -17,6 +17,7 @@ def infinite_play(midi_port, callback):
     while status.is_playing:
         # status.params_changed = False
         fractal = callback()
+        fractal = spread_octaves(fractal, params.octave_spread)
         mid = generate_midi(fractal, params.depth, params.bpm)
         play_midi(midi_port, mid)
 
