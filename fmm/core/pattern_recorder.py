@@ -14,10 +14,6 @@ class PatternRecorder:
         self.recorded_messages = []
         self._buffer = []
 
-    def _on_idle(self):
-        print('User is now idle...')
-        self.idle_timer.stop()
-
     def _reset(self):
         self._buffer = []
         self.last_message_time = 0

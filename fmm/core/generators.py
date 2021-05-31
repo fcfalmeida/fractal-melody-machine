@@ -8,7 +8,7 @@ def fractalize(pattern, bpm, depth, bf=2):
     for level in range(depth):
         n = pow(bf, level)
 
-        for j in range(n):
+        for _ in range(n):
             p = Pattern(pattern.messages)
             p.order = level
             p.set_message_times(bf)
