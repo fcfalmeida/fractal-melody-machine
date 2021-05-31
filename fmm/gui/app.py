@@ -134,7 +134,6 @@ class GUIApp(App):
         if len(available_out_ports) > 0:
             self.out_port = mido.open_output(available_out_ports[0])
 
-        simple.show_style_editor()
         core.set_main_window_size(350, 400)
         core.set_main_window_title('Fractal Melody Machine')
         core.set_theme('Gold')
@@ -161,4 +160,8 @@ class GUIApp(App):
             core.add_text('Octave Spread')
             core.add_child('OctaveWindow', width=300, height=150)
 
+            # Initialize octave spread sliders
+            self.change_depth()
+
         core.start_dearpygui(primary_window='Fractal Melody Machine')
+
