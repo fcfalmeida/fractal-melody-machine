@@ -134,78 +134,21 @@ class GUIApp(App):
         if len(available_out_ports) > 0:
             self.out_port = mido.open_output(available_out_ports[0])
 
+        simple.show_style_editor()
+        core.set_main_window_size(350, 400)
+        core.set_main_window_title('Fractal Melody Machine')
+        core.set_theme('Gold')
+
         with simple.window('Fractal Melody Machine', width=500, height=300):
-            core.add_table('LayoutTable', [], hide_headers=True, height=80)
-
-            core.add_columns('LayoutTableCols', 3, border=False)
-
-            # Left Column
-            #########################################################################################################
-            core.add_text('Key')
-            core.add_combo('ComboKey', items=list(theory.KEYS.keys(
-            )), default_value=params.key, label='', width=100, callback=self.change_key)
-
-            core.add_text('BPM')
-            core.add_slider_int('SliderBPM', default_value=60, min_value=20,
-                                max_value=200, label='', width=100, callback=self.change_bpm)
-
-            core.add_text('Change Probability')
-            core.add_slider_float('SliderProb', default_value=0.7, min_value=0.0, max_value=1.0,
-                                  format='%.2f', label='', width=100, callback=self.change_prob)
-
-            core.add_text('Figures')
-            core.add_child('FigureWindow', width=300, height=150)
-
-            core.add_table('FigureTable', [], hide_headers=True, height=10)
-
-            core.add_columns('FigureTableCols', 2, border=False)
-
-            core.add_checkbox(str(theory.FIGURE_WHOLE_NOTE),
-                              label='Whole note', callback=self.change_figures)
-            core.add_checkbox(str(theory.FIGURE_QUARTER_NOTE),
-                              label='Quarter note', callback=self.change_figures)
-            core.add_checkbox(str(theory.FIGURE_16TH_NOTE),
-                              label='16th note', callback=self.change_figures)
-            core.add_checkbox(str(theory.FIGURE_64TH_NOTE),
-                              label='64th note', callback=self.change_figures)
-
-            core.add_next_column()
-
-            core.add_checkbox(str(theory.FIGURE_HALF_NOTE),
-                              label='Half note', callback=self.change_figures)
-            core.add_checkbox(str(theory.FIGURE_8TH_NOTE),
-                              label='8th note', callback=self.change_figures)
-            core.add_checkbox(str(theory.FIGURE_32ND_NOTE),
-                              label='32nd note', callback=self.change_figures)
-
-            core.end()
-            #########################################################################################################
-
-            core.add_next_column()
-
-            # Middle Column
-            #########################################################################################################
-
             core.add_text('MIDI Input Port')
             core.add_combo('ComboInPort', items=mido.get_input_names(
             ), default_value=status.current_in_port.name, label='', width=100, callback=self.change_midi_in_port)
-
-            core.add_spacing(count=5)
 
             core.add_text('MIDI Output Port')
             core.add_combo('ComboOutPort', items=mido.get_output_names(
             ), default_value=self.out_port.name, label='', width=100, callback=self.change_midi_out_port)
 
-            core.add_spacing(count=5)
-
-            core.add_button('Play', callback=self.play, width=100, height=50)
-
-            #########################################################################################################
-
-            core.add_next_column()
-
-            # Right Column
-            #########################################################################################################
+            core.add_spacing(count=10)
 
             core.add_text('Depth')
             core.add_slider_int('SliderDepth', default_value=4, min_value=1,
@@ -217,10 +160,5 @@ class GUIApp(App):
 
             core.add_text('Octave Spread')
             core.add_child('OctaveWindow', width=300, height=150)
-            core.end()
-            #########################################################################################################
-
-            # Close table
-            # core.end()
 
         core.start_dearpygui(primary_window='Fractal Melody Machine')
