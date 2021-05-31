@@ -25,12 +25,9 @@ class GUIApp(App):
         self.recorder = PatternRecorder(params.bpm, self.play)
 
     def play(self):
-        if not status.is_playing:
-            status.is_playing = True
-
-            play_thread = threading.Thread(
-                target=midi.infinite_play, args=(self.out_port, self.create_fractal))
-            play_thread.start()
+        play_thread = threading.Thread(
+            target=midi.infinite_play, args=(self.out_port, self.create_fractal))
+        play_thread.start()
 
     def change_key(self):
         params.key = core.get_value('ComboKey')
@@ -119,9 +116,7 @@ class GUIApp(App):
         self.recorder.record_message(message)
 
     def create_fractal(self):
-        pattern = Pattern(self.recorder.recorded_messages)
-
-        return fractalize(pattern, params.bpm, params.depth, params.branching_factor)
+        return self.recorder.recorded_messages
 
     def start(self):
         available_out_ports = mido.get_output_names()

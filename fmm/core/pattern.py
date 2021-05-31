@@ -1,3 +1,4 @@
+import math
 class Pattern:
     def __init__(self, messages):
         self.messages = list(map(lambda msg: msg.copy(), messages))
@@ -25,11 +26,23 @@ class Pattern:
             time = self.messages[i].time / pow(branching_factor, self.order)
             self.messages[i] = self.messages[i].copy(time=time)
 
-    def __repr__(self):
-        return '<' + str(self.messages) + '|' + str(self.order) + '>'
+    def is_velocity_above_threshold(self, vel_threshold):
+        for msg in self.messages:
+            if msg.type == 'note_on' and msg.velocity < vel_threshold:
+                return False
+        
+        return True
 
-    def __str__(self):
-        return '<' + str(self.messages) + '|' + str(self.order) + '>'
+    def decay_velocity(self, time, rate):
+        for i, msg in enumerate(self.messages):
+            velocity = msg.velocity
+            velocity -= velocity * math.sqrt(time) * rate
+
+            # prevent velocity from going below 0
+            if (velocity < 0):
+                velocity = 0
+
+            self.messages[i].velocity = int(velocity)
 
     def __len__(self):
         return len(self.messages)
