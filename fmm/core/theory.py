@@ -1,3 +1,5 @@
+from fmm.core.utils.helpers import list_similarity
+
 # Figures
 FIGURE_WHOLE_NOTE = 4
 FIGURE_HALF_NOTE = 2
@@ -43,3 +45,28 @@ def notes_in_key(key):
         notes.append(notes[i] + intervals[i])
 
     return notes
+
+def get_pitch_class(note):
+    return note % 12
+
+def closest_key(msg_list):
+    highest_similarity = 0
+    best_match = None
+
+    # Filter messages that are not note_on
+    note_ons = list(filter(lambda msg: msg.type == 'note_on', msg_list))
+
+    pattern_pitch_classes = list(map(lambda msg: get_pitch_class(msg.note), note_ons))
+
+    for key in KEYS.keys():
+        key_notes = notes_in_key(key)
+
+        key_pitch_classes = list(map(lambda note: get_pitch_class(note), key_notes))
+        
+        similarity = list_similarity(pattern_pitch_classes, key_pitch_classes)
+
+        if similarity > highest_similarity:
+            highest_similarity = similarity
+            best_match = key
+
+    return best_match

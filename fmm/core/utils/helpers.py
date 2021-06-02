@@ -13,3 +13,6 @@ def check_all_notes_off(msg_list):
             return False
 
     return True
+
+def list_similarity(list1, list2):
+    return len(set(list1) & set(list2))

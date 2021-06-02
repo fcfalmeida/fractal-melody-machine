@@ -1,8 +1,11 @@
 import math
+from fmm.core.theory import closest_key
+
 class Pattern:
     def __init__(self, messages):
         self.messages = list(map(lambda msg: msg.copy(), messages))
         self._order = 0
+        self.key = closest_key(messages)
 
     @property
     def order(self):
