@@ -1,6 +1,6 @@
 import time
 import random
-from fmm.core.generators import fractalize, generate_midi, spread_octaves
+from fmm.core.generators import fractalize, generate_midi, spread_octaves, random_pattern
 from fmm.core.pattern import Pattern
 import fmm.core.theory as theory
 import fmm.core.status as status
@@ -14,7 +14,7 @@ def play_midi(port, midi_file):
             port.send(message)
             print(message)
 
-def infinite_play(midi_port, callback):
+def _inifinite_play(midi_port, callback, decay):
     repeats = 0
     RAMP_VEL_AT = 1
 
@@ -25,7 +25,7 @@ def infinite_play(midi_port, callback):
         pattern = Pattern(msg_list)
 
         if (repeats >= RAMP_VEL_AT):
-            pattern.decay_velocity(repeats, 0.4)
+            pattern.decay_velocity(repeats, decay)
 
         if not pattern.is_velocity_above_threshold(1):
             break
@@ -39,3 +39,20 @@ def infinite_play(midi_port, callback):
         repeats += 1
 
     midi_port.reset()
+
+def infinite_play(midi_port, callback):
+    # Prevent multiplt threads from playing at once
+    if (status.is_playing):
+         return
+
+    base_pattern = Pattern(callback())
+
+    status.is_playing = True
+
+    # Fractalize user input
+    _inifinite_play(midi_port, callback, 0.4)
+
+    # Automatically generate a fractal as an "answer" to user input
+    _inifinite_play(midi_port, lambda: random_pattern(base_pattern.key, [1, 0.5], 4, params.bpm), 0.5)
+
+    status.is_playing = False

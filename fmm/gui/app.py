@@ -116,7 +116,7 @@ class GUIApp(App):
         self.recorder.record_message(message)
 
     def create_fractal(self):
-        return self.recorder.recorded_messages
+        return Pattern(self.recorder.recorded_messages)
 
     def start(self):
         available_out_ports = mido.get_output_names()
