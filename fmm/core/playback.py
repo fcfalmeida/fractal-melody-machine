@@ -54,6 +54,6 @@ def play_loop(midi_port, callback):
     _play_loop(midi_port, callback, 0.4)
 
     # Automatically generate a fractal as an "answer" to user input
-    _play_loop(midi_port, lambda: random_pattern(base_pattern.key, [1, 0.5], 4, params.bpm), 0.5)
+    _play_loop(midi_port, lambda: random_pattern(base_pattern.key, params.figures, 4, params.bpm), 0.5)
 
     status.is_playing = False

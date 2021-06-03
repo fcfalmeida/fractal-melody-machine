@@ -38,7 +38,7 @@ class GUIApp(App):
         params.bpm = core.get_value('SliderBPM')
 
         # Update recorder bpm
-        self.recorder = PatternRecorder(params.bpm, 4, on_finish=self.play)
+        self.recorder = PatternRecorder(params.bpm, self.play)
 
         status.params_changed = True
 
@@ -130,7 +130,7 @@ class GUIApp(App):
         if len(available_out_ports) > 0:
             self.out_port = mido.open_output(available_out_ports[0])
 
-        core.set_main_window_size(350, 400)
+        core.set_main_window_size(350, 550)
         core.set_main_window_title('Fractal Melody Machine')
         core.set_theme('Gold')
 
@@ -145,6 +145,9 @@ class GUIApp(App):
 
             core.add_spacing(count=10)
 
+            core.add_text('BPM')
+            core.add_slider_int('SliderBPM', default_value=60, min_value=20, max_value=200, label='', width=100, callback=self.change_bpm)
+
             core.add_text('Depth')
             core.add_slider_int('SliderDepth', default_value=4, min_value=1,
                                 max_value=16, label='', width=100, callback=self.change_depth)
@@ -155,6 +158,27 @@ class GUIApp(App):
 
             core.add_text('Octave Spread')
             core.add_child('OctaveWindow', width=300, height=150)
+            core.end()
+
+            core.add_text('Figures')
+            core.add_child('FigureWindow', width=300, height=150)
+
+            core.add_table('FigureTable', [], hide_headers=True, height=10)
+
+            core.add_columns('FigureTableCols', 2, border=False)
+
+            core.add_checkbox(str(theory.FIGURE_WHOLE_NOTE), label='Whole note', callback=self.change_figures)
+            core.add_checkbox(str(theory.FIGURE_QUARTER_NOTE), label='Quarter note', callback=self.change_figures)
+            core.add_checkbox(str(theory.FIGURE_16TH_NOTE), label='16th note', callback=self.change_figures)
+            core.add_checkbox(str(theory.FIGURE_64TH_NOTE), label='64th note', callback=self.change_figures)
+
+            core.add_next_column()
+
+            core.add_checkbox(str(theory.FIGURE_HALF_NOTE), label='Half note', callback=self.change_figures)
+            core.add_checkbox(str(theory.FIGURE_8TH_NOTE), label='8th note', callback=self.change_figures)
+            core.add_checkbox(str(theory.FIGURE_32ND_NOTE), label='32nd note', callback=self.change_figures)
+
+            core.end()
 
             # Initialize octave spread sliders
             self.change_depth()
