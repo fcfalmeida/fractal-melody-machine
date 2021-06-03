@@ -2,6 +2,7 @@ import time
 from mido import second2tick, bpm2tempo, Message, MetaMessage
 from fmm.core.utils.helpers import check_all_notes_off
 from fmm.core.utils.repeated_timer import RepeatedTimer
+from fmm.core.constants import TICKS_PER_BEAT
 
 class PatternRecorder:
     def __init__(self, bpm, on_finish=None):
@@ -34,7 +35,7 @@ class PatternRecorder:
         self.last_message_time = current_time
 
         # TODO: get the ticks per beat value from some constant
-        message.time = second2tick(delta_time, 480, bpm2tempo(self.bpm))
+        message.time = second2tick(delta_time, TICKS_PER_BEAT, bpm2tempo(self.bpm))
         self._buffer.append(message)
         print(message)
 

@@ -3,6 +3,7 @@ from mido import Message, MetaMessage, MidiFile, MidiTrack, bpm2tempo
 from fmm.core.pattern import Pattern
 from fmm.core.theory import notes_in_key, closest_key
 from fmm.core.utils.converters import beats2ticks
+from fmm.core.constants import TICKS_PER_BEAT
 
 def fractalize(pattern, bpm, depth, bf=2):
     fractal = []
@@ -44,7 +45,7 @@ def random_pattern(key, figures, beats_per_measure, bpm):
         while total_duration < beats_per_measure:
             note = random.choice(note_numbers)
             duration = random.choice(figures)
-            ticks = beats2ticks(duration, bpm, 480)
+            ticks = beats2ticks(duration, bpm, TICKS_PER_BEAT)
 
             note_on = Message('note_on', note=note, velocity=80, time=0)
             note_off = Message('note_off', note=note, velocity=0, time=ticks)
