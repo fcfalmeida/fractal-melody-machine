@@ -8,8 +8,6 @@ import fmm.core.params as params
 
 def play_midi(port, midi_file):
     for message in midi_file.play():
-        #if not status.is_playing:
-        #    break
         if not message.is_meta:
             port.send(message)
             print(message)
@@ -23,7 +21,6 @@ def _play_loop(midi_port, callback, decay):
     RAMP_VEL_AT = 1
 
     while True:
-        # status.params_changed = False
         msg_list = callback()
 
         pattern = Pattern(msg_list)
@@ -45,7 +42,7 @@ def _play_loop(midi_port, callback, decay):
     midi_port.reset()
 
 def play_loop(midi_port, callback):
-    # Prevent multiplt threads from playing at once
+    # Prevent multiple threads from playing at once
     if (status.is_playing):
          return
 
