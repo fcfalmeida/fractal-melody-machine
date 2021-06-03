@@ -3,7 +3,7 @@ import threading
 import signal
 import sys
 from fmm.core.app import App
-import fmm.core.midi as midi
+import fmm.core.playback as midi
 import fmm.core.theory as theory
 import fmm.core.status as status
 import fmm.core.params as params
@@ -27,7 +27,7 @@ class NoGUIApp(App):
         if not status.is_playing:
             status.is_playing = True
 
-            play_thread = threading.Thread(target=midi.infinite_play, args=(self.port,))
+            play_thread = threading.Thread(target=midi.play_loop, args=(self.port,))
             play_thread.start()
         else:
             status.is_playing = False
