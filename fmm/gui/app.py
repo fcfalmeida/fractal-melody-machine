@@ -7,7 +7,7 @@ from fmm.core.pattern_recorder import PatternRecorder
 from fmm.core.generators import fractalize
 from fmm.core.pattern import Pattern
 import fmm.core.theory as theory
-import fmm.core.playback as midi
+import fmm.core.playback as playback
 import fmm.core.status as status
 import fmm.core.params as params
 
@@ -26,7 +26,7 @@ class GUIApp(App):
 
     def play(self):
         play_thread = threading.Thread(
-            target=midi.play_loop, args=(self.out_port, self.create_fractal))
+            target=playback.play_loop, args=(self.out_port, self.create_fractal))
         play_thread.start()
 
     def change_key(self):
@@ -113,6 +113,7 @@ class GUIApp(App):
         if not self.recorder.recording and message.type == 'note_on':
             self.recorder.start()
 
+        playback.route_midi(self.out_port, message, 0)
         self.recorder.record_message(message)
 
     def create_fractal(self):

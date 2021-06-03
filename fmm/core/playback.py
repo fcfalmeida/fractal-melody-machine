@@ -14,6 +14,10 @@ def play_midi(port, midi_file):
             port.send(message)
             print(message)
 
+def route_midi(port, message, channel):
+    message.channel = channel
+    port.send(message)
+
 def _play_loop(midi_port, callback, decay):
     repeats = 0
     RAMP_VEL_AT = 1
