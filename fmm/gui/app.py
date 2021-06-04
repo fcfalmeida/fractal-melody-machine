@@ -29,10 +29,8 @@ class GUIApp(App):
             target=playback.play_loop, args=(self.out_port, self.create_fractal))
         play_thread.start()
 
-    def change_key(self):
-        params.key = core.get_value('ComboKey')
-
-        status.params_changed = True
+    def change_key(self, key):
+        core.set_value('DetectedKey', f'Detected Key: {key}')
 
     def change_bpm(self):
         params.bpm = core.get_value('SliderBPM')
@@ -117,7 +115,11 @@ class GUIApp(App):
         self.recorder.record_message(message)
 
     def create_fractal(self):
-        return Pattern(self.recorder.recorded_messages)
+        pattern = Pattern(self.recorder.recorded_messages)
+
+        self.change_key(pattern.key)
+
+        return pattern
 
     def start(self):
         available_out_ports = mido.get_output_names()
@@ -151,6 +153,9 @@ class GUIApp(App):
             core.add_text('Depth')
             core.add_slider_int('SliderDepth', default_value=4, min_value=1,
                                 max_value=16, label='', width=100, callback=self.change_depth)
+
+            core.add_same_line(spacing=45)
+            core.add_text('DetectedKey', default_value='Detected Key: ')
 
             core.add_text('Branching Factor')
             core.add_slider_int('SliderBF', default_value=2, min_value=2,
