@@ -18,8 +18,7 @@ class GUIApp(App):
 
         self.MAX_DEPTH = 16
 
-        # TODO set default params
-        params.figures = []
+        params.figures = [theory.FIGURE_QUARTER_NOTE, theory.FIGURE_8TH_NOTE]
         params.octave_spread = [0] * self.MAX_DEPTH
 
         self.recorder = PatternRecorder(params.bpm, self.play)
@@ -173,14 +172,14 @@ class GUIApp(App):
             core.add_columns('FigureTableCols', 2, border=False)
 
             core.add_checkbox(str(theory.FIGURE_WHOLE_NOTE), label='Whole note', callback=self.change_figures)
-            core.add_checkbox(str(theory.FIGURE_QUARTER_NOTE), label='Quarter note', callback=self.change_figures)
+            core.add_checkbox(str(theory.FIGURE_QUARTER_NOTE), label='Quarter note', callback=self.change_figures, default_value=True)
             core.add_checkbox(str(theory.FIGURE_16TH_NOTE), label='16th note', callback=self.change_figures)
             core.add_checkbox(str(theory.FIGURE_64TH_NOTE), label='64th note', callback=self.change_figures)
 
             core.add_next_column()
 
             core.add_checkbox(str(theory.FIGURE_HALF_NOTE), label='Half note', callback=self.change_figures)
-            core.add_checkbox(str(theory.FIGURE_8TH_NOTE), label='8th note', callback=self.change_figures)
+            core.add_checkbox(str(theory.FIGURE_8TH_NOTE), label='8th note', callback=self.change_figures, default_value=True)
             core.add_checkbox(str(theory.FIGURE_32ND_NOTE), label='32nd note', callback=self.change_figures)
 
             core.end()
