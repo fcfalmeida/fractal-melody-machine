@@ -47,7 +47,7 @@ def random_pattern(key, figures, beats_per_measure, bpm):
             duration = random.choice(figures)
             ticks = beats2ticks(duration, bpm, TICKS_PER_BEAT)
 
-            note_on = Message('note_on', note=note, velocity=80, time=0)
+            note_on = Message('note_on', note=note, velocity=64, time=0)
             note_off = Message('note_off', note=note, velocity=0, time=ticks)
 
             messages.append(note_on)
