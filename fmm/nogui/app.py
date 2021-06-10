@@ -16,12 +16,10 @@ class NoGUIApp(App):
         super().__init__()
 
         params.figures = [theory.FIGURE_8TH_NOTE, theory.FIGURE_QUARTER_NOTE]
-        params.key = 'D'
         params.depth = 4
         params.branching_factor = 2
         params.bpm = 60
         params.octave_spread = [-1, -1, 0, 1, 2]
-        params.change_prob = 0.7
 
     def play(self):
         if not status.is_playing:

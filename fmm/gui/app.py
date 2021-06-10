@@ -39,12 +39,6 @@ class GUIApp(App):
 
         status.params_changed = True
 
-    def change_prob(self):
-        prob = core.get_value('SliderProb')
-        params.change_prob = round(prob, 2)
-
-        status.params_changed = True
-
     def change_figures(self, figure):
         checked = core.get_value(figure)
         figure_value = float(figure)

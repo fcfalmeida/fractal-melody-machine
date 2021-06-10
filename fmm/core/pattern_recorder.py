@@ -34,7 +34,6 @@ class PatternRecorder:
         delta_time = current_time - self.last_message_time
         self.last_message_time = current_time
 
-        # TODO: get the ticks per beat value from some constant
         message.time = second2tick(delta_time, TICKS_PER_BEAT, bpm2tempo(self.bpm))
         self._buffer.append(message)
         print(message)
