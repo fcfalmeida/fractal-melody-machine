@@ -2,6 +2,7 @@ import time
 import random
 from fmm.generators import fractalize, generate_midi, spread_octaves, random_pattern
 from fmm.pattern import Pattern
+from fmm.utils.helpers import vel_zero_to_noteoff
 import fmm.theory as theory
 import fmm.status as status
 import fmm.params as params
@@ -21,9 +22,8 @@ def _play_loop(midi_port, callback, decay):
     RAMP_VEL_AT = 1
 
     while True:
-        msg_list = callback()
-
-        pattern = Pattern(msg_list)
+        pattern = callback()
+        pattern.messages = vel_zero_to_noteoff(pattern.messages)
 
         if (repeats >= RAMP_VEL_AT):
             pattern.decay_velocity(repeats, decay)
