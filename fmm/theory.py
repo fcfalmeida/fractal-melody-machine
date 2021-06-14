@@ -1,4 +1,4 @@
-from fmm.core.utils.helpers import list_similarity
+from fmm.utils.helpers import list_similarity
 
 # Figures
 FIGURE_WHOLE_NOTE = 4

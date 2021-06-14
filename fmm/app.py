@@ -2,22 +2,24 @@ import mido
 import threading
 import re
 from dearpygui import core, simple
-from fmm.core.app import App
-from fmm.core.pattern_recorder import PatternRecorder
-from fmm.core.generators import fractalize
-from fmm.core.pattern import Pattern
-import fmm.core.theory as theory
-import fmm.core.playback as playback
-import fmm.core.status as status
-import fmm.core.params as params
+from fmm.pattern_recorder import PatternRecorder
+from fmm.generators import fractalize
+from fmm.pattern import Pattern
+import fmm.theory as theory
+import fmm.playback as playback
+import fmm.status as status
+import fmm.params as params
 
 
-class GUIApp(App):
+class App():
     def __init__(self):
-        super().__init__()
-
         self.MAX_DEPTH = 16
+        self.out_port = None
 
+        # Set default params
+        params.depth = 2
+        params.branching_factor = 2
+        params.bpm = 60
         params.figures = [theory.FIGURE_QUARTER_NOTE, theory.FIGURE_8TH_NOTE]
         params.octave_spread = [0] * self.MAX_DEPTH
 

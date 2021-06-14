@@ -1,5 +1,5 @@
 import math
-from fmm.core.theory import closest_key
+from fmm.theory import closest_key
 
 class Pattern:
     def __init__(self, messages):

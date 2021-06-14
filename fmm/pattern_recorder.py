@@ -1,8 +1,8 @@
 import time
 from mido import second2tick, bpm2tempo, Message, MetaMessage
-from fmm.core.utils.helpers import check_all_notes_off
-from fmm.core.utils.repeated_timer import RepeatedTimer
-from fmm.core.constants import TICKS_PER_BEAT
+from fmm.utils.helpers import check_all_notes_off
+from fmm.utils.repeated_timer import RepeatedTimer
+from fmm.constants import TICKS_PER_BEAT
 
 class PatternRecorder:
     def __init__(self, bpm, on_finish=None):
