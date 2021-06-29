@@ -4,7 +4,7 @@ The Fractal Melody Machine is a MIDI melody generator written in Python inspired
 # Installation
 
 ```bash
-pip3 install requirements.txt
+pip3 install -r requirements.txt
 ```
 
 # Running
